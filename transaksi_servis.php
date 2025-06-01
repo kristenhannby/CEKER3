@@ -277,6 +277,9 @@ $resultTransaksi = mysqli_query($conn, $queryTransaksi);
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+    <!-- Sidebar CSS -->
+    <link href="assets/css/smooth-sidebar.css" rel="stylesheet">
+
     <style>
     /* Perbaikan CSS untuk Select2 */
     .select2-container {
@@ -428,13 +431,6 @@ $resultTransaksi = mysqli_query($conn, $queryTransaksi);
         </div>
     </li>
 
-            <!-- Nav Item - Service -->
-            <li class="nav-item">
-                <a class="nav-link" href="layanan_servis.php">
-                    <i class="fas fa-cogs fa-2x"></i>
-                    <span>Layanan Servis</span></a>
-            </li>
-
              <!-- Nav Item - Transaksi Servis -->
              <li class="nav-item active">
                 <a class="nav-link" href="transaksi_servis.php">
@@ -522,20 +518,21 @@ $resultTransaksi = mysqli_query($conn, $queryTransaksi);
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Transaksi Servis</h1>
-                        <button class="btn btn-dark" data-toggle="modal" data-target="#modalTransaksi">
-                            <i class="fas fa-plus fa-sm text-white-50"></i> Transaksi Baru
-                        </button>
-                    </div>
+                    
+                    <h1 class="h3 mb-0 text-gray-800">Transaksi Servis</h1>
+                    <p class="mb-4">Halaman ini untuk Mengelola Transaksi Servis.</p>
+                    
 
                     <!-- Alert messages -->
                     <?php echo $alert; ?>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
-                        <div class="card-header py-3">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
                             <h6 class="m-0 font-weight-bold text-dark">Daftar Transaksi Servis</h6>
+                            <button class="btn btn-dark" data-toggle="modal" data-target="#modalTransaksi">
+                                <i class="fas fa-plus fa-sm"></i> Transaksi Baru
+                            </button>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -682,8 +679,8 @@ $resultTransaksi = mysqli_query($conn, $queryTransaksi);
     </div>
 
     <!-- Modal Tambah Transaksi with Fixed Structure -->
-<div class="modal fade" id="modalTransaksi" tabindex="-1" role="dialog" aria-labelledby="modalTransaksiLabel"
-    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="modalTransaksi" tabindex="-1" role="dialog" 
+    aria-labelledby="modalTransaksiLabel"aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -736,7 +733,7 @@ $resultTransaksi = mysqli_query($conn, $queryTransaksi);
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label for="pelanggan_id">Pelanggan:</label>
+                                        <label for="pelanggan_id">Pelanggan: <span class="text-danger">*</span></label>
                                         <select class="form-control select2-pelanggan" id="pelanggan_id" name="pelanggan_id" required>
                                             <?php if (!empty($pelanggan_id)) : 
                                                 $queryPelanggan = mysqli_query($conn, "SELECT id, nama_pelanggan FROM pelanggan WHERE id = '$pelanggan_id'");
@@ -747,7 +744,7 @@ $resultTransaksi = mysqli_query($conn, $queryTransaksi);
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="kendaraan_id">Kendaraan:</label>
+                                        <label for="kendaraan_id">Kendaraan: <span class="text-danger">*</span></label>
                                         <select class="form-control select2-kendaraan" id="kendaraan_id" name="kendaraan_id" required <?php if(empty($pelanggan_id)) echo 'disabled'; ?>>
                                             <?php if (!empty($kendaraan_id)) : 
                                                 $queryKendaraan = mysqli_query($conn, "SELECT id, no_polisi, merk_kendaraan FROM kendaraan WHERE id = '$kendaraan_id'");
@@ -758,7 +755,7 @@ $resultTransaksi = mysqli_query($conn, $queryTransaksi);
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="mekanik_id">Mekanik:</label>
+                                        <label for="mekanik_id">Mekanik: <span class="text-danger">*</span></label>
                                         <select class="form-control" id="mekanik_id" name="mekanik_id" required>
                                             <option value="">-- Pilih Mekanik --</option>
                                             <?php 
@@ -915,16 +912,22 @@ $resultTransaksi = mysqli_query($conn, $queryTransaksi);
     <!-- Page level custom scripts -->
     <script src="assets/js/demo/datatables-demo.js"></script>
 
+    <!--  Sidebar JS -->
+    <script src="assets/js/smooth-sidebar.js"></script>
+
    <!-- Select2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
+
+        
 
 // Fix z-index issues for Select2 dropdowns in modal
     $.fn.modal.Constructor.prototype._enforceFocus = function() {};
 
     // JavaScript for transaksi_servis.php
 $(document).ready(function() {
+    
     // Initialize DataTable
     $('#dataTable').DataTable();
 
@@ -1360,6 +1363,21 @@ function addSparepartRow(data = null) {
     var $newRow = $(newRow);
     $('#tabelSparepart tbody').append($newRow);
     initializeSelect2Sparepart($newRow.find('.select2-sparepart'));
+}
+
+    // Fungsi loading
+    function showLoading() {
+    $('#modalTransaksi .modal-content').append(`
+        <div class="loading-overlay">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    `);
+}
+
+function hideLoading() {
+    $('#modalTransaksi .loading-overlay').remove();
 }
 
     </script>
